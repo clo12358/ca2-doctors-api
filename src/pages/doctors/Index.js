@@ -24,7 +24,10 @@ const Index = () => {
         <>
             <container>
                 <div className="max-w-4xl mx-auto">
-                    <button className="btn btn-success text-base-100 btn-sm">Add new Doctor</button>
+                    <button className="btn btn-success text-base-100 btn-sm"
+                    onClick={() => navigate('/doctors/create')}>
+                        Add new Doctor
+                    </button>
                 </div>
                 <div className="max-w-4xl mx-auto">
                     <table className="table">

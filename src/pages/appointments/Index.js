@@ -1,9 +1,14 @@
+import { useNavigate } from 'react-router-dom';
+
 const Index = () => {
+    const navigate = useNavigate();
     return(
         <>
         <container>
             <div className="max-w-4xl mx-auto">
-                    <button className="btn btn-success text-base-100 btn-sm">Creat Appointment</button>
+                    <button className="btn btn-success text-base-100 btn-sm"
+                    onClick={() => navigate('/appointments/create')}>
+                    Create Appointment</button>
             </div>
             <div className="max-w-4xl mx-auto">
             <table className="table">
