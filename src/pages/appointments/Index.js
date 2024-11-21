@@ -2,7 +2,10 @@ const Index = () => {
     return(
         <>
         <container>
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-4xl mx-auto">
+                    <button className="btn btn-success text-base-100 btn-sm">Creat Appointment</button>
+            </div>
+            <div className="max-w-4xl mx-auto">
             <table className="table">
                 {/* head */}
                 <thead>

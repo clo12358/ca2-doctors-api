@@ -20,7 +20,10 @@ const Index = () => {
     return (
         <>
             <container>
-                <div className="overflow-x-auto">
+                <div className="max-w-4xl mx-auto">
+                        <button className="btn btn-success text-base-100 btn-sm">Add new patient</button>
+                </div>
+                <div className="max-w-4xl mx-auto">
                     <table className="table">
                         {/* Head section */}
                         <thead>
