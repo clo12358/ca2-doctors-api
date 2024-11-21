@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from './components/Navbar';
-// import Home from './pages/Home';
+import Home from './pages/Home';
 // import FestivalsIndex from './pages/festivals/Index';
 // import SingleFestival from "./pages/festivals/SingleFestival";
 // import LoginForm from "./components/LoginForm";
@@ -19,7 +19,7 @@ const App = () => {
             <Router>
                 <Navbar />
                 <Routes>
-                    {/* <Route path="/" element={<Home />} /> */}
+                    <Route path="/" element={<Home />} />
 
                     {/* Festival routes */}
                     {/* <Route path="/festivals" element={<FestivalsIndex />} /> */}
@@ -29,6 +29,7 @@ const App = () => {
                         <Route path='/festivals/:id' element={<SingleFestival />} />
                     </Route> */}
                     {/* <Route path='/login' element={<LoginForm />} /> */}
+                    {/* <Route path="/" element={<LoginForm />} /> */}
                     {/* <Route path='/register' element={<RegisterForm />} /> */}
                 </Routes>
             </Router>

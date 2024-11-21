@@ -32,3 +32,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+// I got this code from https://daisyui.com/components/navbar/
