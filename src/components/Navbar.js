@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 const Navbar = () => {
 
     return (
@@ -7,9 +8,10 @@ const Navbar = () => {
             {/* Quick Links */}
             <div className="flex-1">
                 <ul className="menu menu-horizontal px-1">
-                    <li><a>Doctors</a></li>
-                    <li><a>Patients</a></li>
-                    <li><a>Appointments</a></li>
+                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/doctors'>Doctors</Link></li>
+                    <li><Link to='/patients'>Patients</Link></li>
+                    <li><Link to='/appointments'>Appointments</Link></li>
                 </ul>
             </div>
 

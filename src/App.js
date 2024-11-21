@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-// import FestivalsIndex from './pages/festivals/Index';
+import DoctorsIndex from './pages/doctors/Index';
+import PatientsIndex from './pages/patients/Index';
+import AppointmentIndex from './pages/appointments/Index';
 // import SingleFestival from "./pages/festivals/SingleFestival";
 // import LoginForm from "./components/LoginForm";
 // import RegisterForm from "./components/RegisterForm";
@@ -21,8 +23,15 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
 
-                    {/* Festival routes */}
-                    {/* <Route path="/festivals" element={<FestivalsIndex />} /> */}
+                    {/* Doctor routes */}
+                    <Route path="/doctors" element={<DoctorsIndex />}/>
+
+                    {/* Patients */}
+                    <Route path="/patients" element={<PatientsIndex />}/>
+
+                    {/* Appointments */}
+                    <Route path="/appointments" element={<AppointmentIndex />}/>
+
                     {/* <Route path='/' element={<ProtectedRoute />}>
                         <Route path='/festivals/create' element={<Create />} />
                         <Route path='/festivals/:id/edit' element={<Edit />} />

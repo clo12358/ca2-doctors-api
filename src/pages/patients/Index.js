@@ -7,21 +7,23 @@ const Index = () => {
                 {/* head */}
                 <thead>
                 <tr> 
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Doctor</th>
+                    <th>Patient</th>
                     <th>Phone No.</th>
-                    <th>Specialisation</th>
+                    <th>Date of birth</th>
+                    <th>Address</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 <tr className="hover">
-                    <td>Aoife</td>
-                    <td>Lynch</td>
-                    <td>alynch@gmail.com</td>
-                    <td>0873452765</td>
-                    <td>Podiatrist</td>
+                    <td>Julia</td>
+                    <td>Szew</td>
+                    <td>jszew@gmail.com</td>
+                    <td>0874562453</td>
+                    <td>01/01/2001</td>
+                    <td>Balbriggan</td>
                 </tr>
                 </tbody>
             </table>

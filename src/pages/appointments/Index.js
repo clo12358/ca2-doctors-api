@@ -2,26 +2,22 @@ const Index = () => {
     return(
         <>
         <container>
-            <div className="overflow-x-auto">
+            <div className="max-w-2xl mx-auto">
             <table className="table">
                 {/* head */}
                 <thead>
                 <tr> 
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Phone No.</th>
-                    <th>Specialisation</th>
+                    <th>Date</th>
+                    <th>Doctor</th>
+                    <th>Patient</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 <tr className="hover">
-                    <td>Aoife</td>
-                    <td>Lynch</td>
-                    <td>alynch@gmail.com</td>
-                    <td>0873452765</td>
-                    <td>Podiatrist</td>
+                    <td>24/11/2024</td>
+                    <td>Aoife Lynch</td>
+                    <td>Julia Szew</td>
                 </tr>
                 </tbody>
             </table>
