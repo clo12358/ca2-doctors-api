@@ -18,6 +18,8 @@ const Navbar = () => {
             {/* Account */}
             <div className="flex-none">
                 <ul className="menu menu-horizontal px-1">
+                <li><Link to='/login'>Login</Link></li>
+                <li><Link to='/register'>Register</Link></li>
                 <li>
                     <details>
                     <summary>Chloe Dwyer</summary>

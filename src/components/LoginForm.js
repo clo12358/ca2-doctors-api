@@ -1,4 +1,33 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../utils/useAuth';
+
 const LoginForm = () => {
+
+    const navigate = useNavigate();
+    const {login} = useAuth();
+
+    const [form, setForm] = useState({
+        email: '',
+        password: ''
+    })
+
+    const handleSubmit = (e) => {
+        // The form will cause a refresh by default. We don't want that, because our state will disappear.
+        e.preventDefault();        
+
+        login(form.email, form.password)
+           
+        navigate('/')
+    }
+
+    const handleChange = (e) => {
+        setForm(({
+            ...form,
+            [e.target.name]: e.target.value
+        }))
+    }
+
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
             <div className="max-w-sm w-full bg-white border border-gray-200 rounded-lg shadow-md p-6 dark:bg-gray-800 dark:border-gray-700">
@@ -36,7 +65,7 @@ const LoginForm = () => {
                         />
                     </div>
                     <button
-                        type="submit"
+                        onClick={handleSubmit}
                         className="btn btn-active btn-primary w-full"
                     >
                         Login

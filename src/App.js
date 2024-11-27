@@ -23,11 +23,11 @@ import RegisterForm from "./components/RegisterForm";
 // import ProtectedRoute from './components/ProtectedRoute'
 // import Create from './pages/festivals/Create';
 // import Edit from './pages/festivals/Edit'
-// import { AuthProvider } from "./utils/useAuth";
+import { AuthProvider } from "./utils/useAuth";
 
 const App = () => {
     return (
-        // <AuthProvider>
+        <AuthProvider>
             <Router>
                 <Navbar />
                 <Routes>
@@ -58,7 +58,7 @@ const App = () => {
                     <Route path="/register" element={<RegisterForm />} />
                 </Routes>
             </Router>
-        // </AuthProvider>
+         </AuthProvider>
     );
 };
 
