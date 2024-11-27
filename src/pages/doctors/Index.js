@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 const Index = () => {
     const [doctors, setDoctors] = useState(null);
@@ -22,7 +23,7 @@ const Index = () => {
 
     return (
         <>
-            <container>
+            <div>
                 <div className="max-w-4xl mx-auto">
                     <button className="btn btn-success text-base-100 btn-sm"
                     onClick={() => navigate('/doctors/create')}>
@@ -43,15 +44,15 @@ const Index = () => {
 
                         {/* Body section */}
                         <tbody>
-                            {doctors.map(({ _id, first_name, last_name, email, phone, specialisation }) => (
-                                <tr key={_id} className="hover">
+                            {doctors.map(({ id, first_name, last_name, specialisation }) => (
+                                <tr key={id} className="hover">
                                     <td>{first_name}</td>
                                     <td>{last_name}</td>
                                     <td>{specialisation}</td>
                                     <td>
                                         <button 
                                             className="btn btn-info btn-sm text-base-100" 
-                                            onClick={() => navigate('/doctors/id')}>
+                                            onClick={() => navigate(`/doctors/${id}`)}>
                                             Info
                                         </button>
                                     </td>
@@ -60,11 +61,9 @@ const Index = () => {
                         </tbody>
                     </table>
                 </div>
-            </container>
+            </div>
         </>
     );
 };
 
 export default Index;
-
-// I got this from https://daisyui.com/components/table/ 
