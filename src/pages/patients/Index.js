@@ -42,15 +42,15 @@ const Index = () => {
 
                         {/* Body section */}
                         <tbody>
-                            {patients.map(({ _id, first_name, last_name, email, phone, date_of_birth, address }) => (
-                                <tr key={_id} className="hover">
+                            {patients.map(({ id, first_name, last_name, email, phone, date_of_birth, address }) => (
+                                <tr key={id} className="hover">
                                     <td>{first_name}</td>
                                     <td>{last_name}</td>
                                     <td>{email}</td>
                                     <td>
                                         <button 
                                             className="btn btn-info btn-sm text-base-100" 
-                                            onClick={() => navigate('/patients/id')}>
+                                            onClick={() => navigate(`/patients/${id}`)}>
                                             Info
                                         </button>
                                     </td>

@@ -22,7 +22,7 @@ const Show = () => {
             .catch((err) => {
                 console.error(err);
             });
-    }, [id, token]);  // Add id and token to the dependency array
+    }, [id, token]);
 
     return doctor && (
         <div className="max-w-4xl mx-auto">

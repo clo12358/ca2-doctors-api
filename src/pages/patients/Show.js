@@ -1,5 +1,31 @@
+import { useEffect, useState } from "react";
+import axios from 'axios';
+import { useParams } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { useAuth } from "../../utils/useAuth";
+
 const Show = () => {
-    return(
+
+    const { token } = useAuth();
+    const [patient, setPatient] = useState(null);
+    const { id } = useParams();
+
+    useEffect(() => {
+        axios.get(`https://fed-medical-clinic-api.vercel.app/patients/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then((res) => {
+                console.log(res);
+                setPatient(res.data);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }, [id, token]);
+
+    return patient && (
         <div className="max-w-4xl mx-auto">
         <div className="px-4 py-5 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -13,7 +39,7 @@ const Show = () => {
                         First name
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        Julia
+                        {patient.first_name}
                     </dd>
                 </div>
                 <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -21,7 +47,7 @@ const Show = () => {
                         Last name
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        Szew
+                        {patient.last_name}
                     </dd>
                 </div>
                 <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -29,7 +55,7 @@ const Show = () => {
                         Email
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        jszew@gmail.com
+                        {patient.email}
                     </dd>
                 </div>
                 <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -37,7 +63,7 @@ const Show = () => {
                         Phone number
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        0974739675
+                        {patient.phone}
                     </dd>
                 </div>
                 <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -45,7 +71,7 @@ const Show = () => {
                         Date of birth
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        23/05/1999
+                        {patient.date_of_birth}
                     </dd>
                 </div>
                 <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -53,7 +79,7 @@ const Show = () => {
                         Address
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        Balbriggan
+                        {patient.address}
                     </dd>
                 </div>
                 <button className="btn btn-error text-base-100 ">Delete</button>
