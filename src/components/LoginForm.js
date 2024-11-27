@@ -5,28 +5,26 @@ import { useAuth } from '../utils/useAuth';
 const LoginForm = () => {
 
     const navigate = useNavigate();
-    const {login} = useAuth();
+    const { login } = useAuth();
 
     const [form, setForm] = useState({
         email: '',
         password: ''
-    })
+    });
 
     const handleSubmit = (e) => {
-        // The form will cause a refresh by default. We don't want that, because our state will disappear.
-        e.preventDefault();        
-
-        login(form.email, form.password)
-           
-        navigate('/')
-    }
+        e.preventDefault();
+        login(form.email, form.password);
+        navigate('/');
+    };
 
     const handleChange = (e) => {
-        setForm(({
+        console.log(e.target.name, e.target.value);  // Debugging
+        setForm({
             ...form,
             [e.target.name]: e.target.value
-        }))
-    }
+        });
+    };
 
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -34,7 +32,7 @@ const LoginForm = () => {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-5 text-center">
                     Login
                 </h2>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className="mb-5">
                         <label
                             htmlFor="email"
@@ -45,8 +43,11 @@ const LoginForm = () => {
                         <input
                             type="email"
                             id="email"
+                            name="email"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="name@flowbite.com"
+                            onChange={handleChange} 
+                            value={form.email}
                             required
                         />
                     </div>
@@ -60,12 +61,15 @@ const LoginForm = () => {
                         <input
                             type="password"
                             id="password"
+                            name="password"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            onChange={handleChange} 
+                            value={form.password}
                             required
                         />
                     </div>
                     <button
-                        onClick={handleSubmit}
+                        type="submit"
                         className="btn btn-active btn-primary w-full"
                     >
                         Login
@@ -77,5 +81,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
-// I got this code from https://flowbite.com/docs/components/forms/
