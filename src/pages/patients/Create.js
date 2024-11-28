@@ -1,4 +1,43 @@
+import { useState } from "react";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../utils/useAuth";
+
 const Create = () => {
+
+    const { token } = useAuth();
+    const navigate = useNavigate();
+
+    const [form, setForm] = useState({
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        specialisation: ''
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Prevent page reload on form submission
+        axios.post(`https://fed-medical-clinic-api.vercel.app/doctors`, form, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then((res) => {
+            console.log(res.data);           
+            navigate(`../${res.data._id}`, { relative: 'path' });
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    };
+
+    const handleChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        });
+    };
     return (
         <>
             <form class="max-w-md mx-auto">
