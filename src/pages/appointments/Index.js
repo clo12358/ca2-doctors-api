@@ -12,8 +12,7 @@ const Index = () => {
 
     const navigate = useNavigate();
 
-
-    // Appointments
+    // Fetch appointments, doctors, and patients
     useEffect(() => {
         axios.get('https://fed-medical-clinic-api.vercel.app/appointments', {
             headers: {
@@ -21,15 +20,12 @@ const Index = () => {
             },
         })
             .then((res) => {
-                console.log(res);
                 setAppointments(res.data);
             })
             .catch((err) => {
-                console.error(err);
+                console.error("Error fetching appointments", err);
             });
 
-
-        // Doctors
         axios.get('https://fed-medical-clinic-api.vercel.app/doctors', {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -44,8 +40,6 @@ const Index = () => {
             })
             .catch(err => console.error('Error loading doctors', err));
 
-
-        // Patients
         axios.get('https://fed-medical-clinic-api.vercel.app/patients', {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -60,6 +54,27 @@ const Index = () => {
             })
             .catch(err => console.error('Error loading patients', err));
     }, [token]);
+
+    // Delete appointment function
+    const handleDelete = (id) => {
+        if (window.confirm("Are you sure you want to delete this appointment?")) {
+            axios
+                .delete(`https://fed-medical-clinic-api.vercel.app/appointments/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((response) => {
+                    console.log("Appointment deleted successfully", response);
+                    setAppointments(appointments.filter((appointment) => appointment.id !== id));
+                    alert("Appointment successfully deleted.");
+                })
+                .catch((err) => {
+                    console.error("Error deleting appointment", err);
+                    alert("Failed to delete the appointment.");
+                });
+        }
+    };
 
     if (!appointments) return (
         <div
@@ -130,7 +145,10 @@ const Index = () => {
                                 <td className="px-4 py-3">{doctors[doctor_id]}</td>
                                 <td className="px-4 py-3">{patients[patient_id]}</td>
                                 <td className="px-4 py-3 flex gap-2">
-                                    <button className="btn btn-error btn-sm text-base-100">
+                                    <button
+                                        className="btn btn-error btn-sm text-base-100"
+                                        onClick={() => handleDelete(id)}
+                                    >
                                         Delete
                                     </button>
                                     <Link to={`edit`} className="btn btn-info btn-sm text-base-100">
