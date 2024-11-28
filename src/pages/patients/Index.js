@@ -4,16 +4,16 @@ import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
     const [patients, setPatients] = useState(null);
-
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('https://fed-medical-clinic-api.vercel.app/patients')
-            .then(response => {
+        axios
+            .get('https://fed-medical-clinic-api.vercel.app/patients')
+            .then((response) => {
                 console.log(response.data);
                 setPatients(response.data);
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     }, []);
@@ -21,49 +21,69 @@ const Index = () => {
     if (!patients) return 'Loading...';
 
     return (
-        <>
-            <container>
-                <div className="max-w-4xl mx-auto">
-                        <button className="btn btn-success text-base-100 btn-sm"
-                        onClick={() => navigate('/patients/create')}>
-                            Add new patient</button>
-                </div>
-                <div className="max-w-4xl mx-auto">
-                    <table className="table">
-                        {/* Head section */}
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Info</th>
-                            </tr>
-                        </thead>
+        <div className="w-full px-4 py-6 lg:px-8">
+            {/* Add New Patient Button */}
+            <div className="flex justify-end mb-4">
+                <button
+                    className="btn btn-success text-base-100 btn-sm"
+                    onClick={() => navigate('/patients/create')}
+                >
+                    Add New Patient
+                </button>
+            </div>
 
-                        {/* Body section */}
-                        <tbody>
-                            {patients.map(({ id, first_name, last_name, email, phone, date_of_birth, address }) => (
-                                <tr key={id} className="hover">
-                                    <td>{first_name}</td>
-                                    <td>{last_name}</td>
-                                    <td>{email}</td>
-                                    <td>
-                                        <button 
-                                            className="btn btn-info btn-sm text-base-100" 
-                                            onClick={() => navigate(`/patients/${id}`)}>
-                                            Info
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </container>
-        </>
+            {/* Responsive Table */}
+            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table className="table w-full text-left">
+                    {/* Table Head */}
+                    <thead className="bg-gray-100 text-gray-600">
+                        <tr>
+                            <th className="px-4 py-2">Name</th>
+                            <th className="px-4 py-2">Email</th>
+                            <th className="px-4 py-2">Phone No.</th>
+                            <th className="px-4 py-2">Info</th>
+                        </tr>
+                    </thead>
+
+                    {/* Table Body */}
+                    <tbody>
+                        {patients.map(({ id, first_name, last_name, email, phone }) => (
+                            <tr key={id} className="hover:bg-gray-50">
+                                <td className="px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            <div className="mask mask-squircle h-12 w-12">
+                                                <img
+                                                    src="https://cdn-icons-png.flaticon.com/512/2815/2815428.png"
+                                                    alt="Patient Avatar"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="font-bold">{first_name}</div>
+                                            <div className="text-sm opacity-50">{last_name}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span className="badge badge-ghost badge-md">{email}</span>
+                                </td>
+                                <td>{phone}</td>
+                                <td>
+                                    <button
+                                        className="btn btn-info btn-sm text-base-100"
+                                        onClick={() => navigate(`/patients/${id}`)}
+                                    >
+                                        Info
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     );
 };
 
 export default Index;
-
-// I got this from https://daisyui.com/components/table/ 

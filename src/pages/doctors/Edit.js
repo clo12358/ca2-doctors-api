@@ -44,7 +44,6 @@ const Edit = () => {
 
     // Handle form submission
     const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
         console.log("Submitting form:", form);
 
         axios
@@ -80,7 +79,7 @@ const Edit = () => {
     ];
 
     return (
-        <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
+        <div className="max-w-md mx-auto">
             <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-5">
                     Edit Doctor
@@ -175,11 +174,11 @@ const Edit = () => {
 
             <br />
             <div className="max-w-4xl mx-auto">
-                <button type="submit" className="btn btn-success text-base-100 btn-sm">
+                <button onClick={handleSubmit} className="btn btn-success text-base-100 btn-sm">
                     Update
                 </button>
             </div>
-        </form>
+        </div>
     );
 };
 

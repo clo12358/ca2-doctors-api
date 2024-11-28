@@ -31,37 +31,61 @@ const Index = () => {
     if (!diagnoses) return <div>Loading...</div>;
 
     return(
-        <>
-            <div className="max-w-4xl mx-auto">
-                <button className="btn btn-success text-base-100 btn-sm"
-                onClick={() => navigate('/prescriptions/create')}>
-                Create Prescriptions</button>
+        <div className="w-full px-4 py-6 lg:px-8">
+            {/* Add New Doctor Button */}
+            <div className="flex justify-end mb-4">
+                <button
+                    className="btn btn-success text-base-100 btn-sm"
+                    onClick={() => navigate('/diagnoses/create')}
+                >
+                    Add New Diagnoses
+                </button>
             </div>
 
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Patient </th>
-                        <th>Diagnoses</th>
-                        <th>Medication</th>
-                        <th>View More</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {diagnoses.map(({ id, patient_id, condition, diagnosis_date }) => (
-                        <tr key={id} className="hover">
-                            <td>{patient_id}</td>
-                            <td>{condition}</td>
-                            <td>{diagnosis_date}</td>
-                            <td>
-                            <button className="btn btn-error text-base-100">Delete</button>
-                            <Link to={`edit`} className="btn btn-info text-base-100">Edit Appointment</Link>
-                            </td>
+            {/* Responsive Table */}
+            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table className="table w-full text-left">
+                    {/* Table Head */}
+                    <thead className="bg-gray-100 text-gray-600">
+                        <tr>
+                            <th className="px-4 py-2">Patient</th>
+                            <th className="px-4 py-2">Condition</th>
+                            <th className="px-4 py-2">Date</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </>
+                    </thead>
+
+                    {/* Table Body */}
+                    <tbody>
+                        {diagnoses.map(({ id, patient_id, condition, diagnosis_date }) => (
+                            <tr key={id} className="hover:bg-gray-50">
+                                <td className="px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            <div className="mask mask-squircle h-12 w-12">
+                                                <img
+                                                    src="https://cdn-icons-png.flaticon.com/512/2117/2117031.png"
+                                                    alt="Diagnoses Avatar"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="font-bold">{patient_id}</div>
+                                            {/* <div className="text-sm opacity-50">{last_name}</div> */}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span className="badge badge-ghost badge-md">
+                                        {condition}
+                                    </span>
+                                </td>
+                                <td>{diagnosis_date}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     );
 };
 

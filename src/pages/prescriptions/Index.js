@@ -30,42 +30,72 @@ const Index = () => {
     if (!prescriptions) return <div>Loading...</div>;
 
     return(
-        <>
-            <div className="max-w-4xl mx-auto">
-                <button className="btn btn-success text-base-100 btn-sm"
-                onClick={() => navigate('/prescriptions/create')}>
-                Create Prescriptions</button>
+        <div className="w-full px-4 py-6 lg:px-8">
+            {/* Add New Doctor Button */}
+            <div className="flex justify-end mb-4">
+                <button
+                    className="btn btn-success text-base-100 btn-sm"
+                    onClick={() => navigate('/prescriptions/create')}
+                >
+                    Add New Prescription
+                </button>
             </div>
 
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Patient </th>
-                        <th>Diagnoses</th>
-                        <th>Medication</th>
-                        <th>Dosage</th>
-                        <th>View More</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {prescriptions.map(({ id, patient_id, diagnosis_id, medication, dosage }) => (
-                        <tr key={id} className="hover">
-                            <td>{patient_id}</td>
-                            <td>{diagnosis_id}</td>
-                            <td>{medication}</td>
-                            <td>{dosage}</td>
-                            <td>
-                            <button 
-                                className="btn btn-info btn-sm text-base-100" 
-                                onClick={() => navigate(`/prescriptions/${id}`)}>
-                                Info
-                            </button>
-                            </td>
+            {/* Responsive Table */}
+            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table className="table w-full text-left">
+                    {/* Table Head */}
+                    <thead className="bg-gray-100 text-gray-600">
+                        <tr>
+                            <th className="px-4 py-2">Patient</th>
+                            <th className="px-4 py-2">Diagnoses</th>
+                            <th className="px-4 py-2">Medication</th>
+                            <th className="px-4 py-2">Dosage</th>
+                            <th className="px-4 py-2">View More</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </>
+                    </thead>
+
+                    {/* Table Body */}
+                    <tbody>
+                        {prescriptions.map(({ id, patient_id, diagnosis_id, medication, dosage }) => (
+                            <tr key={id} className="hover:bg-gray-50">
+                                <td className="px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            <div className="mask mask-squircle h-12 w-12">
+                                                <img
+                                                    src="https://cdn-icons-png.flaticon.com/512/1097/1097905.png"
+                                                    alt="Medication Avatar"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="font-bold">{patient_id}</div>
+                                            {/* <div className="text-sm opacity-50">{last_name}</div> */}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{diagnosis_id}</td>
+                                <td>
+                                    <span className="badge badge-ghost badge-md">
+                                        {medication}
+                                    </span>
+                                </td>
+                                <td>{dosage}</td>
+                                <td>
+                                    <button
+                                        className="btn btn-info btn-sm text-base-100"
+                                        onClick={() => navigate(`/prescriptions/${id}`)}
+                                    >
+                                        Info
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     );
 };
 
