@@ -16,7 +16,7 @@ const Create = () => {
     });
 
     const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent page reload on form submission
+        e.preventDefault();
         axios.post(`https://fed-medical-clinic-api.vercel.app/doctors`, form, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -24,12 +24,13 @@ const Create = () => {
         })
         .then((res) => {
             console.log(res.data);           
-            navigate(`../${res.data._id}`, { relative: 'path' });
+            navigate("/doctors");
         })
         .catch((err) => {
             console.error(err);
         });
     };
+    
 
     const handleChange = (e) => {
         setForm({
