@@ -7,31 +7,61 @@ import { Link } from "react-router-dom";
 const Index = () => {
     const { token } = useAuth();
     const [appointments, setAppointments] = useState(null);
+    const [doctors, setDoctors] = useState({});
+    const [patients, setPatients] = useState({});
     const [error, setError] = useState(null);
-    
+
     const navigate = useNavigate();
 
+
+    // Appointments
     useEffect(() => {
         axios.get('https://fed-medical-clinic-api.vercel.app/appointments', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         })
+            .then(response => setAppointments(response.data))
+            .catch(err => setError('Error loading appointments'));
+
+
+        // Doctors
+        axios.get('https://fed-medical-clinic-api.vercel.app/doctors', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
             .then(response => {
-                console.log(response.data);
-                setAppointments(response.data);
+                const doctorMap = response.data.reduce((acc, doctor) => {
+                    acc[doctor.id] = `${doctor.first_name} ${doctor.last_name}`;
+                    return acc;
+                }, {});
+                setDoctors(doctorMap);
             })
-            .catch(err => {
-                console.error(err);
-                setError('Error loading appointments');
-            });
+            .catch(err => console.error('Error loading doctors', err));
+
+
+        // Patients
+        axios.get('https://fed-medical-clinic-api.vercel.app/patients', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then(response => {
+                const patientMap = response.data.reduce((acc, patient) => {
+                    acc[patient.id] = `${patient.first_name} ${patient.last_name}`;
+                    return acc;
+                }, {});
+                setPatients(patientMap);
+            })
+            .catch(err => console.error('Error loading patients', err));
     }, [token]);
 
     if (error) return <div>{error}</div>;
-    if (!appointments) return <div>Loading...</div>;
+    if (!appointments || !Object.keys(doctors).length || !Object.keys(patients).length)
+        return <div>Loading...</div>;
 
-    return(
-        <>
+    return (
         <div className="w-full px-4 py-6 lg:px-8">
             {/* Create Appointment Button */}
             <div className="flex justify-end mb-4">
@@ -70,8 +100,8 @@ const Index = () => {
                                         <div>{appointment_date}</div>
                                     </div>
                                 </td>
-                                <td className="px-4 py-3">{doctor_id}</td>
-                                <td className="px-4 py-3">{patient_id}</td>
+                                <td className="px-4 py-3">{doctors[doctor_id]}</td>
+                                <td className="px-4 py-3">{patients[patient_id]}</td>
                                 <td className="px-4 py-3 flex gap-2">
                                     <button className="btn btn-error btn-sm text-base-100">
                                         Delete
@@ -86,9 +116,6 @@ const Index = () => {
                 </table>
             </div>
         </div>
-
-            
-        </>
     );
 };
 

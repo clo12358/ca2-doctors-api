@@ -2,15 +2,18 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from "../../utils/useAuth";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const Index = () => {
     const { token } = useAuth();
     const [diagnoses, setDiagnoses] = useState(null);
+    const [patients, setPatients] = useState({});
     const [error, setError] = useState(null);
     
     const navigate = useNavigate();
 
+
+    // Diagnoses
     useEffect(() => {
         axios.get('https://fed-medical-clinic-api.vercel.app/diagnoses', {
             headers: {
@@ -25,6 +28,21 @@ const Index = () => {
                 console.error(err);
                 setError('Error loading prescriptions');
             });
+
+            // Patients
+        axios.get('https://fed-medical-clinic-api.vercel.app/patients', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then(response => {
+                const patientMap = response.data.reduce((acc, patient) => {
+                    acc[patient.id] = `${patient.first_name} ${patient.last_name}`;
+                    return acc;
+                }, {});
+                setPatients(patientMap);
+            })
+            .catch(err => console.error('Error loading patients', err));
     }, [token]);
 
     if (error) return <div>{error}</div>;
@@ -32,7 +50,7 @@ const Index = () => {
 
     return(
         <div className="w-full px-4 py-6 lg:px-8">
-            {/* Add New Doctor Button */}
+            {/* Add New Diagnoses Button */}
             <div className="flex justify-end mb-4">
                 <button
                     className="btn btn-success text-base-100 btn-sm"
@@ -69,7 +87,7 @@ const Index = () => {
                                             </div>
                                         </div>
                                         <div>
-                                            <div className="font-bold">{patient_id}</div>
+                                            <div className="font-bold">{patients[patient_id]}</div>
                                             {/* <div className="text-sm opacity-50">{last_name}</div> */}
                                         </div>
                                     </div>

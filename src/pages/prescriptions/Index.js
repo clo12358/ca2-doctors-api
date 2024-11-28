@@ -6,10 +6,13 @@ import { useAuth } from "../../utils/useAuth";
 const Index = () => {
     const { token } = useAuth();
     const [prescriptions, setPrescriptions] = useState(null);
+    const [patients, setPatients] = useState({});
+    const [diagnoses, setDiagnoses] = useState({});
     const [error, setError] = useState(null);
     
     const navigate = useNavigate();
 
+    // Prescriptions
     useEffect(() => {
         axios.get('https://fed-medical-clinic-api.vercel.app/prescriptions', {
             headers: {
@@ -24,6 +27,36 @@ const Index = () => {
                 console.error(err);
                 setError('Error loading prescriptions');
             });
+
+            // Patients
+            axios.get('https://fed-medical-clinic-api.vercel.app/patients', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(response => {
+                    const patientMap = response.data.reduce((acc, patient) => {
+                        acc[patient.id] = `${patient.first_name} ${patient.last_name}`;
+                        return acc;
+                    }, {});
+                    setPatients(patientMap);
+                })
+                .catch(err => console.error('Error loading patients', err));
+
+            // Diagnoses
+            axios.get('https://fed-medical-clinic-api.vercel.app/diagnoses', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(response => {
+                    const diagnoseMap = response.data.reduce((acc, diagnose) => {
+                        acc[diagnose.id] = `${diagnose.condition}`;
+                        return acc;
+                    }, {});
+                    setDiagnoses(diagnoseMap);
+                })
+                .catch(err => console.error('Error loading patients', err));
     }, [token]);
 
     if (error) return <div>{error}</div>;
@@ -70,12 +103,13 @@ const Index = () => {
                                             </div>
                                         </div>
                                         <div>
-                                            <div className="font-bold">{patient_id}</div>
+                                            <div className="font-bold">{patients[patient_id]}</div>
                                             {/* <div className="text-sm opacity-50">{last_name}</div> */}
                                         </div>
                                     </div>
                                 </td>
-                                <td>{diagnosis_id}</td>
+                                {/* <td>{diagnosis_id}</td> */}
+                                <td>{diagnoses[diagnosis_id]}</td>
                                 <td>
                                     <span className="badge badge-ghost badge-md">
                                         {medication}
