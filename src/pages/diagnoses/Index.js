@@ -8,7 +8,6 @@ const Index = () => {
     const { token } = useAuth();
     const [diagnoses, setDiagnoses] = useState(null);
     const [patients, setPatients] = useState({});
-    const [error, setError] = useState(null);
     
     const navigate = useNavigate();
 
@@ -20,33 +19,69 @@ const Index = () => {
                 Authorization: `Bearer ${token}`,
             },
         })
-            .then(response => {
-                console.log(response.data);
-                setDiagnoses(response.data);
+            .then((res) => {
+                console.log(res);
+                setDiagnoses(res.data);
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error(err);
-                setError('Error loading prescriptions');
             });
 
             // Patients
-        axios.get('https://fed-medical-clinic-api.vercel.app/patients', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-            .then(response => {
-                const patientMap = response.data.reduce((acc, patient) => {
-                    acc[patient.id] = `${patient.first_name} ${patient.last_name}`;
-                    return acc;
-                }, {});
-                setPatients(patientMap);
+            axios.get('https://fed-medical-clinic-api.vercel.app/patients', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             })
-            .catch(err => console.error('Error loading patients', err));
-    }, [token]);
+                .then(response => {
+                    const patientMap = response.data.reduce((acc, patient) => {
+                        acc[patient.id] = `${patient.first_name} ${patient.last_name}`;
+                        return acc;
+                    }, {});
+                    setPatients(patientMap);
+                })
+                .catch(err => console.error('Error loading patients', err));
+        }, [token]);
 
-    if (error) return <div>{error}</div>;
-    if (!diagnoses) return <div>Loading...</div>;
+    if (!diagnoses) return (
+        <div
+            role="alert"
+            className="alert alert-warning"
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                padding: '1rem',
+                width: '300px',
+                textAlign: 'center',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                borderRadius: '8px',
+            }}
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+                style={{ width: '40px', height: '40px', marginBottom: '0.5rem' }}
+            >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+            </svg>
+            <span className='font-bold'>
+                Error fetching Diagnoses!
+            </span>
+        </div>
+    );
 
     return(
         <div className="w-full px-4 py-6 lg:px-8">
