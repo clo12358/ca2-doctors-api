@@ -27,10 +27,6 @@ import PrescriptionsShow from './pages/prescriptions/Show';
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 
-
-// import ProtectedRoute from './components/ProtectedRoute'
-// import Create from './pages/festivals/Create';
-// import Edit from './pages/festivals/Edit'
 import { AuthProvider } from "./utils/useAuth";
 
 const App = () => {
@@ -61,7 +57,7 @@ const App = () => {
 
                     {/* Prescriptions */}
                     <Route path="/prescriptions" element={<PrescriptionsIndex />}/>
-                    <Route path="/prescriptions:id" element={<PrescriptionsShow />}/>
+                    <Route path="/prescriptions/:id" element={<PrescriptionsShow />}/>
 
                     {/* <Route path='/' element={<ProtectedRoute />}>
                         <Route path='/festivals/create' element={<Create />} />

@@ -127,7 +127,6 @@ const Index = () => {
                 </button>
             </div>
 
-            {/* Responsive Table */}
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="table w-full text-left">
                     {/* Table Head */}
