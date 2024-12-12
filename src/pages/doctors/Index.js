@@ -40,7 +40,7 @@ const Index = () => {
         >
             <span className="loading loading-infinity loading-lg"></span>
             <span className='font-bold'>
-                Error fetching Doctors!
+                Loading Doctors
             </span>
         </div>
     );

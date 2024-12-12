@@ -6,7 +6,7 @@ import { useAuth } from "../../utils/useAuth";
 const Show = () => {
     const { token } = useAuth();
     const [doctor, setDoctor] = useState(null);
-    const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [isLoading, setIsLoading] = useState(true);
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -49,14 +49,63 @@ const Show = () => {
         }
     };
 
-    if (isLoading) {
-        return <p>Loading doctor details...</p>;
-    }
+    if (isLoading) return (
+        <div
+            role="alert"
+            className="alert alert-warning"
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                padding: '1rem',
+                width: '300px',
+                textAlign: 'center',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                borderRadius: '8px',
+            }}
+        >
+            <span className="loading loading-infinity loading-lg"></span>
+            <span className='font-bold'>
+                Loading Doctor
+            </span>
+        </div>
+    );
 
-    if (!doctor) {
-        return <p>Doctor not found or has been deleted.</p>;
-    }
-
+    if (!doctor) return (
+        <div
+            role="alert"
+            className="alert alert-danger"
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                padding: '1rem',
+                width: '300px',
+                textAlign: 'center',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                borderRadius: '8px',
+                backgroundColor: '#f03524',
+                border: '1px solid #f5c6cb',
+            }}
+        >
+            <span className="loading loading-infinity loading-lg text-white"></span>
+            <span className='font-bold text-white'>
+                You do not have authorisation, please login!
+            </span>
+        </div>
+    );
+    
+    
     return (
         <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg border overflow-hidden">
             <div className="bg-gray-100 px-8 py-6 border-b">

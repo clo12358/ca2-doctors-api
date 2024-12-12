@@ -8,6 +8,7 @@ const Index = () => {
     const { token } = useAuth();
     const [diagnoses, setDiagnoses] = useState(null);
     const [patients, setPatients] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
     const navigate = useNavigate();
 
@@ -21,6 +22,7 @@ const Index = () => {
         })
             .then((res) => {
                 setDiagnoses(res.data);
+                setIsLoading(false);
             })
             .catch((err) => {
                 console.error("Error fetching diagnoses", err);
@@ -63,7 +65,7 @@ const Index = () => {
         }
     };
 
-    if (!diagnoses) return (
+    if (isLoading) return (
         <div
             role="alert"
             className="alert alert-warning"
@@ -85,7 +87,36 @@ const Index = () => {
         >
             <span className="loading loading-infinity loading-lg"></span>
             <span className='font-bold'>
-                Error fetching Diagnoses!
+                Loading Diagnoses
+            </span>
+        </div>
+    );
+
+    if (!diagnoses) return (
+        <div
+            role="alert"
+            className="alert alert-danger"
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                padding: '1rem',
+                width: '300px',
+                textAlign: 'center',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                borderRadius: '8px',
+                backgroundColor: '#f03524',
+                border: '1px solid #f5c6cb',
+            }}
+        >
+            <span className="loading loading-infinity loading-lg text-white"></span>
+            <span className='font-bold text-white'>
+                You do not have authorisation, please login!
             </span>
         </div>
     );
