@@ -44,17 +44,17 @@ const Index = () => {
             .catch(err => console.error('Error loading patients', err));
     }, [token]);
 
-    // Handle Delete Functionality
+    // Delete diagnoses function
     const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this diagnosis?")) {
-            axios.delete(`https://fed-medical-clinic-api.vercel.app/diagnoses/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
+        if (window.confirm("Are you sure you want to delete this diagnoses?")) {
+            axios
+                .delete(`https://fed-medical-clinic-api.vercel.app/diagnoses/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
                 .then((response) => {
-                    console.log("Diagnosis deleted successfully", response);
-                    // Remove the deleted diagnosis from the state
+                    console.log("Diagnoses deleted successfully", response);
                     setDiagnoses(diagnoses.filter((diagnosis) => diagnosis.id !== id));
                     alert("Diagnosis successfully deleted.");
                 })
@@ -64,6 +64,7 @@ const Index = () => {
                 });
         }
     };
+
 
     if (isLoading) return (
         <div
@@ -133,7 +134,6 @@ const Index = () => {
                 </button>
             </div>
 
-            {/* Responsive Table */}
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="table w-full text-left">
                     {/* Table Head */}

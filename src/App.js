@@ -59,14 +59,8 @@ const App = () => {
                     <Route path="/prescriptions" element={<PrescriptionsIndex />}/>
                     <Route path="/prescriptions/:id" element={<PrescriptionsShow />}/>
 
-                    {/* <Route path='/' element={<ProtectedRoute />}>
-                        <Route path='/festivals/create' element={<Create />} />
-                        <Route path='/festivals/:id/edit' element={<Edit />} />
-                        <Route path='/festivals/:id' element={<SingleFestival />} />
-                    </Route> */}
-                    {/* <Route path='/login' element={<LoginForm />} /> */}
+                    {/* Login & Register */}
                     <Route path="/login" element={<LoginForm />} />
-                    {/* <Route path='/register' element={<RegisterForm />} /> */}
                     <Route path="/register" element={<RegisterForm />} />
                 </Routes>
             </Router>
