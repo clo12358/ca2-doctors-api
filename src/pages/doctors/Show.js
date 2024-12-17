@@ -10,6 +10,17 @@ const Show = () => {
     const [doctorPrescriptions, setDoctorPrescriptions] = useState([]);
     const { id } = useParams();
 
+        // Format date function
+        const formatDate = (date) => {
+            const appointmentDate = new Date(date);
+            return appointmentDate.toLocaleDateString("en-US", {
+                weekday: 'long', 
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        };
+
     // Delete Doctor
     const deleteDoctor = async (id) => {
         if (!doctorInfo) return;
@@ -186,8 +197,9 @@ const Show = () => {
                                 key={appointment.id}
                                 className="border rounded-lg p-4 shadow-sm bg-gray-50"
                             >
-                                <h4 className="font-bold text-gray-800">Date: {appointment.date}</h4>
-                                <p className="text-sm text-gray-600">Patient: {appointment.patientName}</p>
+                                {/* <h4 className="font-bold text-gray-800">Date: {appointment.date}</h4> */}
+                                <h4 className="font-bold text-gray-800">Date: {formatDate(appointment.appointment_date)}</h4>
+                                <p className="text-sm text-gray-600">Patient: {appointment.patient_name}</p>
                             </div>
                         ))
                     ) : (

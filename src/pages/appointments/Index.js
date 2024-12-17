@@ -13,7 +13,16 @@ const Index = () => {
 
     const navigate = useNavigate();
 
-    // Fetch appointments, doctors, and patients
+    const formatDate = (date) => {
+        const appointmentDate = new Date(date);
+        return appointmentDate.toLocaleDateString("en-US", {
+            weekday: 'long', 
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
     useEffect(() => {
         axios.get('https://fed-medical-clinic-api.vercel.app/appointments', {
             headers: {
@@ -57,7 +66,6 @@ const Index = () => {
             .catch(err => console.error('Error loading patients', err));
     }, [token]);
 
-    // Delete appointment function
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this appointment?")) {
             axios
@@ -170,7 +178,8 @@ const Index = () => {
                                                 />
                                             </div>
                                         </div>
-                                        <div>{appointment_date}</div>
+                                        {/* Display the formatted date */}
+                                        <div>{formatDate(appointment_date)}</div>
                                     </div>
                                 </td>
                                 <td className="px-4 py-3">{doctors[doctor_id]}</td>

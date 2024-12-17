@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/useAuth";
 
@@ -11,9 +11,20 @@ const Show = () => {
     const [doctorName, setDoctorName] = useState("");
     const [diagnoses, setDiagnoses] = useState("");
     const { id } = useParams();
+    const navigate = useNavigate();
+
+    // Format date function
+    const formatDate = (date) => {
+        const dates = new Date(date);
+        return dates.toLocaleDateString("en-US", {
+            weekday: 'long', 
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
 
     useEffect(() => {
-        // Fetch the prescription
         axios.get(`https://fed-medical-clinic-api.vercel.app/prescriptions/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -59,6 +70,25 @@ const Show = () => {
             })
             .catch((err) => console.error("Error loading prescription:", err));
     }, [id, token]);
+    
+    const handleDelete = () => {
+        if (window.confirm("Are you sure you want to delete this prescription?")) {
+            axios
+                .delete(`https://fed-medical-clinic-api.vercel.app/prescriptions/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then(() => {
+                    alert("Prescription successfully deleted.");
+                    navigate("/prescriptions"); // Navigate to prescriptions list
+                })
+                .catch((err) => {
+                    console.error("Error deleting prescription", err);
+                    alert("Failed to delete the prescription.");
+                });
+        }
+    };
 
     if (!prescription) return <div>Loading...</div>;
 
@@ -84,9 +114,7 @@ const Show = () => {
                     {/* Diagnoses */}
                     <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Diagnoses</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{diagnoses || "Loading..."}</dd>
-                        </dd>
                     </div>
 
                     {/* Medication */}
@@ -104,17 +132,19 @@ const Show = () => {
                     {/* Start Date */}
                     <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Start Date</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{prescription.start_date}</dd>
+                        {/* <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{prescription.start_date}</dd> */}
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{formatDate(prescription.start_date)}</dd>
                     </div>
 
                     {/* End Date */}
                     <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">End Date</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{prescription.end_date}</dd>
+                        {/* <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{prescription.end_date}</dd> */}
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{formatDate(prescription.end_date)}</dd>
                     </div>
 
                     {/* Action Buttons */}
-                    <button className="btn btn-error text-base-100">Delete</button>
+                    <button className="btn btn-error text-base-100" onClick={handleDelete}>Delete</button>
                     <Link to={`edit`} className="btn btn-info text-base-100">Edit Prescription</Link>
                 </dl>
             </div>

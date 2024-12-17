@@ -44,6 +44,7 @@ const Edit = () => {
 
     // Handle form submission
     const handleSubmit = (e) => {
+        e.preventDefault();
         console.log("Submitting form:", form);
 
         axios

@@ -15,26 +15,41 @@ const Create = () => {
 
     const [doctors, setDoctors] = useState([]);
     const [patients, setPatients] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Fetch doctors and patients
     useEffect(() => {
-        axios
-            .get("https://fed-medical-clinic-api.vercel.app/doctors", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((res) => setDoctors(res.data))
-            .catch((err) => console.error("Failed to fetch doctors:", err));
+        const fetchData = async () => {
+            try {
+                const doctorRes = await axios.get("https://fed-medical-clinic-api.vercel.app/doctors", {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setDoctors(doctorRes.data);
 
-        axios
-            .get("https://fed-medical-clinic-api.vercel.app/patients", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((res) => setPatients(res.data))
-            .catch((err) => console.error("Failed to fetch patients:", err));
+                const patientRes = await axios.get("https://fed-medical-clinic-api.vercel.app/patients", {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setPatients(patientRes.data);
+
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Failed to fetch doctors or patients:", error);
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
     }, [token]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Ensure all fields are filled before submitting
+        if (!form.appointment_date || !form.doctor_id || !form.patient_id) {
+            alert("All fields are required!");
+            return;
+        }
+
         axios
             .post(
                 `https://fed-medical-clinic-api.vercel.app/appointments`,
@@ -45,7 +60,10 @@ const Create = () => {
                 console.log(res.data);
                 navigate(`../${res.data._id}`, { relative: "path" });
             })
-            .catch((err) => console.error(err));
+            .catch((err) => {
+                console.error("Error creating appointment:", err);
+                alert("Failed to create appointment.");
+            });
     };
 
     const handleChange = (e) => {
@@ -54,6 +72,8 @@ const Create = () => {
             [e.target.name]: e.target.value,
         });
     };
+
+    if (isLoading) return <div>Loading doctors and patients...</div>;
 
     return (
         <form className="max-w-md mx-auto" onSubmit={handleSubmit}>

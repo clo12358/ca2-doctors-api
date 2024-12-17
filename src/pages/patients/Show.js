@@ -11,6 +11,17 @@ const Show = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
+    // Format date function
+    const formatDate = (date) => {
+        const patientDate = new Date(date);
+        return patientDate.toLocaleDateString("en-US", {
+            weekday: 'long', 
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
     // Fetch patient details
     const getPatientById = async (id) => {
         try {
@@ -147,7 +158,8 @@ const Show = () => {
 
                     <div className="py-4 grid grid-cols-3 gap-6">
                         <dt className="text-sm font-medium text-gray-500">Date of Birth</dt>
-                        <dd className="text-lg text-gray-900 col-span-2">{patient.date_of_birth}</dd>
+                        {/* <dd className="text-lg text-gray-900 col-span-2">{patient.date_of_birth}</dd> */}
+                        <dd className="text-lg text-gray-900 col-span-2">{formatDate(patient.date_of_birth)}</dd>
                     </div>
 
                     <div className="py-4 grid grid-cols-3 gap-6">
@@ -162,7 +174,7 @@ const Show = () => {
                     {appointments.length > 0 ? (
                         appointments.map((appointment) => (
                             <div key={appointment.id} className="border rounded-lg p-4 shadow-sm bg-gray-50">
-                                <h4 className="font-bold text-gray-800">Date: {appointment.date}</h4>
+                                <h4 className="font-bold text-gray-800">Date: {formatDate(appointment.appointment_date)}</h4>
                                 <p className="text-sm text-gray-600">Doctor: {appointment.doctor_name}</p>
                             </div>
                         ))

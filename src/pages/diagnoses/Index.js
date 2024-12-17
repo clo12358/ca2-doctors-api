@@ -12,6 +12,16 @@ const Index = () => {
 
     const navigate = useNavigate();
 
+    const formatDate = (date) => {
+        const diagnosisDate = new Date(date);
+        return diagnosisDate.toLocaleDateString("en-US", {
+            weekday: 'long', 
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
     // Fetch Diagnoses and Patients
     useEffect(() => {
         // Fetch Diagnoses
@@ -46,7 +56,7 @@ const Index = () => {
 
     // Delete diagnoses function
     const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this diagnoses?")) {
+        if (window.confirm("Are you sure you want to delete this diagnosis?")) {
             axios
                 .delete(`https://fed-medical-clinic-api.vercel.app/diagnoses/${id}`, {
                     headers: {
@@ -54,7 +64,7 @@ const Index = () => {
                     },
                 })
                 .then((response) => {
-                    console.log("Diagnoses deleted successfully", response);
+                    console.log("Diagnosis deleted successfully", response);
                     setDiagnoses(diagnoses.filter((diagnosis) => diagnosis.id !== id));
                     alert("Diagnosis successfully deleted.");
                 })
@@ -64,7 +74,6 @@ const Index = () => {
                 });
         }
     };
-
 
     if (isLoading) return (
         <div
@@ -117,7 +126,7 @@ const Index = () => {
         >
             <span className="loading loading-infinity loading-lg text-white"></span>
             <span className='font-bold text-white'>
-                You do not have authorisation, please login!
+                You do not have authorization, please login!
             </span>
         </div>
     );
@@ -130,7 +139,7 @@ const Index = () => {
                     className="btn btn-success text-base-100 btn-sm"
                     onClick={() => navigate('/diagnoses/create')}
                 >
-                    Add New Diagnoses
+                    Add New Diagnosis
                 </button>
             </div>
 
@@ -156,7 +165,7 @@ const Index = () => {
                                             <div className="mask mask-squircle h-12 w-12">
                                                 <img
                                                     src="https://cdn-icons-png.flaticon.com/512/2117/2117031.png"
-                                                    alt="Diagnoses Avatar"
+                                                    alt="Diagnosis Avatar"
                                                 />
                                             </div>
                                         </div>
@@ -170,7 +179,7 @@ const Index = () => {
                                         {condition}
                                     </span>
                                 </td>
-                                <td>{diagnosis_date}</td>
+                                <td>{formatDate(diagnosis_date)}</td> {/* Formatted date */}
                                 <td className="px-4 py-3 flex gap-2">
                                     <button
                                         className="btn btn-error btn-sm text-base-100"
@@ -179,7 +188,7 @@ const Index = () => {
                                         Delete
                                     </button>
                                     <Link to={`edit`} className="btn btn-info btn-sm text-base-100">
-                                        Edit Diagnose
+                                        Edit Diagnosis
                                     </Link>
                                 </td>
                             </tr>
