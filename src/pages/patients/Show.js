@@ -6,41 +6,83 @@ import { useAuth } from "../../utils/useAuth";
 const Show = () => {
     const { token } = useAuth();
     const [patient, setPatient] = useState(null);
-    const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [appointments, setAppointments] = useState([]);
+    const [prescriptions, setPrescriptions] = useState([]);
     const { id } = useParams();
     const navigate = useNavigate();
 
     // Fetch patient details
-    useEffect(() => {
-        axios
-            .get(`https://fed-medical-clinic-api.vercel.app/patients/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            .then((res) => {
-                setPatient(res.data);
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                console.error(err);
-                alert("Failed to fetch patient details. Please try again.");
-                setIsLoading(false);
+    const getPatientById = async (id) => {
+        try {
+            const res = await axios.get(`https://fed-medical-clinic-api.vercel.app/patients/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
             });
-    }, [id, token]);
+            setPatient(res.data);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    // Fetch appointments for the patient
+    const getPatientAppointments = async (id) => {
+        try {
+            const res = await axios.get(`https://fed-medical-clinic-api.vercel.app/appointments`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const patientAppointments = res.data.filter((appointment) => appointment.patient_id === parseInt(id));
+            setAppointments(patientAppointments);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    // Fetch prescriptions for the patient
+    const getPatientPrescriptions = async (id) => {
+        try {
+            const res = await axios.get(`https://fed-medical-clinic-api.vercel.app/prescriptions`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const patientPrescriptions = res.data.filter((prescription) => prescription.patient_id === parseInt(id));
+            setPrescriptions(patientPrescriptions);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await getPatientById(id);
+            await getPatientAppointments(id);
+            await getPatientPrescriptions(id);
+        };
+        fetchData();
+    }, [id]);
 
     // Delete patient
     const handleDelete = () => {
         if (window.confirm("Are you sure you want to delete this patient?")) {
-            axios
-                .delete(`https://fed-medical-clinic-api.vercel.app/patients/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+            // Delete appointments
+            const deleteAppointmentJobs = appointments.map((appointment) =>
+                axios.delete(`https://fed-medical-clinic-api.vercel.app/appointments/${appointment.id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
                 })
+            );
+            // Delete prescriptions
+            const deletePrescriptionJobs = prescriptions.map((prescription) =>
+                axios.delete(`https://fed-medical-clinic-api.vercel.app/prescriptions/${prescription.id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+            );
+            
+            // Perform delete operations in parallel
+            Promise.all([...deleteAppointmentJobs, ...deletePrescriptionJobs])
                 .then(() => {
-                    alert("Patient successfully deleted.");
-                    navigate("/patients");
+                    axios.delete(`https://fed-medical-clinic-api.vercel.app/patients/${id}`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }).then(() => {
+                        alert("Patient successfully deleted.");
+                        navigate("/patients");
+                    });
                 })
                 .catch((err) => {
                     console.error(err);
@@ -49,61 +91,33 @@ const Show = () => {
         }
     };
 
-    if (isLoading) return (
-        <div
-            role="alert"
-            className="alert alert-warning"
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                padding: '1rem',
-                width: '300px',
-                textAlign: 'center',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                borderRadius: '8px',
-            }}
-        >
-            <span className="loading loading-infinity loading-lg"></span>
-            <span className='font-bold'>
-                Loading Patient
-            </span>
-        </div>
-    );
-
-    if (!patient) return (
-        <div
-            role="alert"
-            className="alert alert-danger"
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                padding: '1rem',
-                width: '300px',
-                textAlign: 'center',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                borderRadius: '8px',
-                backgroundColor: '#f03524',
-                border: '1px solid #f5c6cb',
-            }}
-        >
-            <span className="loading loading-infinity loading-lg text-white"></span>
-            <span className='font-bold text-white'>
-                You do not have authorisation, please login!
-            </span>
-        </div>
-    );
+    if (!patient)
+        return (
+            <div
+                role="alert"
+                className="alert alert-danger"
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    padding: "1rem",
+                    width: "300px",
+                    textAlign: "center",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "8px",
+                    backgroundColor: "#f03524",
+                    border: "1px solid #f5c6cb",
+                }}
+            >
+                <span className="loading loading-infinity loading-lg text-white"></span>
+                <span className="font-bold text-white">You do not have authorization, please login!</span>
+            </div>
+        );
 
     return (
         <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg border overflow-hidden">
@@ -140,19 +154,46 @@ const Show = () => {
                         <dt className="text-sm font-medium text-gray-500">Address</dt>
                         <dd className="text-lg text-gray-900 col-span-2">{patient.address}</dd>
                     </div>
-
-                    <div className="flex gap-2 pt-2">
-                        <Link to={`edit`} className="btn btn-info text-base-100">
-                            Edit Patient
-                        </Link>
-                        <button
-                            className="btn btn-error text-base-100"
-                            onClick={handleDelete}
-                        >
-                            Delete
-                        </button>
-                    </div>
                 </dl>
+
+                {/* Appointments */}
+                <h1 className="text-xl font-semibold mt-8">Appointments</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                    {appointments.length > 0 ? (
+                        appointments.map((appointment) => (
+                            <div key={appointment.id} className="border rounded-lg p-4 shadow-sm bg-gray-50">
+                                <h4 className="font-bold text-gray-800">Date: {appointment.date}</h4>
+                                <p className="text-sm text-gray-600">Doctor: {appointment.doctor_name}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No appointments</p>
+                    )}
+                </div>
+
+                {/* Prescriptions */}
+                <h1 className="text-xl font-semibold mt-8">Prescriptions</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                    {prescriptions.length > 0 ? (
+                        prescriptions.map((prescription) => (
+                            <div key={prescription.id} className="border rounded-lg p-4 shadow-sm bg-gray-50">
+                                <h4 className="font-bold text-gray-800">Doctor: {prescription.doctor_name}</h4>
+                                <p className="text-sm text-gray-600">Medication: {prescription.medication}</p>
+                                <p className="text-sm text-gray-600">Dosage: {prescription.dosage}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No prescriptions</p>
+                    )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 pt-6">
+                    <Link to={`edit`} className="btn btn-info text-base-100">Edit Patient</Link>
+                    <button className="btn btn-error text-base-100" onClick={handleDelete}>
+                        Delete Patient
+                    </button>
+                </div>
             </div>
         </div>
     );
