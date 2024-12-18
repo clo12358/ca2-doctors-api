@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../utils/useAuth";
 
-const Create = () => {
+const Edit = () => {
     const { token } = useAuth();
     const navigate = useNavigate();
+    const { appointmentId } = useParams();
 
     const [form, setForm] = useState({
         appointment_date: "",
@@ -30,35 +31,41 @@ const Create = () => {
                 });
                 setPatients(patientRes.data);
 
+                // Fetch the existing appointment data to pre-fill the form
+                const appointmentRes = await axios.get(`https://fed-medical-clinic-api.vercel.app/appointments/${appointmentId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setForm(appointmentRes.data);
+
                 setIsLoading(false);
             } catch (error) {
-                console.error("Error fetching doctors or patients:", error);
+                console.error("Error fetching data:", error);
                 setIsLoading(false);
             }
         };
 
         fetchData();
-    }, [token]);
+    }, [token, appointmentId]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const appointmentData = {
+        const updatedAppointmentData = {
             ...form,
             doctor_id: parseInt(form.doctor_id, 10),
             patient_id: parseInt(form.patient_id, 10),
         };
 
         axios
-            .post("https://fed-medical-clinic-api.vercel.app/appointments", appointmentData, {
+            .put(`https://fed-medical-clinic-api.vercel.app/appointments/${appointmentId}`, updatedAppointmentData, {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then((res) => {
-                console.log("Appointment created successfully:", res.data);
+                console.log("Appointment updated successfully:", res.data);
                 navigate("/appointments");
             })
             .catch((err) => {
-                console.error("Error creating appointment:", err.response);
+                console.error("Error updating appointment:", err.response);
                 alert(`Error: ${err.response?.data?.message || "Something went wrong!"}`);
             });
     };
@@ -70,12 +77,12 @@ const Create = () => {
         });
     };
 
-    if (isLoading) return <div>Loading doctors and patients...</div>;
+    if (isLoading) return <div>Loading appointment details, doctors, and patients...</div>;
 
     return (
         <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-5">
-                Create Appointment
+                Edit Appointment
             </h2>
 
             {/* Appointment Date */}
@@ -141,11 +148,11 @@ const Create = () => {
                     type="submit"
                     className="btn btn-success text-base-100 btn-sm"
                 >
-                    Create Appointment
+                    Update Appointment
                 </button>
             </div>
         </form>
     );
 };
 
-export default Create;
+export default Edit;

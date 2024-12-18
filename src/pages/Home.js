@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
     const [weatherInfo, setWeatherInfo] = useState(null);
-    // const navigate = useNavigate();
+    const [doctors, setDoctors] = useState([]);
+    const [patients, setPatients] = useState([]);
 
     useEffect(() => {
         axios
             .get(`https://api.openweathermap.org/data/2.5/weather?lat=53.29494514181048&lon=-6.142677530050762&appid=aab2ff189d9e140ba0bdf7dc2ca63c97`)
             .then((response) => {
-                console.log(response.data);
                 setWeatherInfo(response.data);
             })
             .catch((err) => {
@@ -18,39 +17,100 @@ const Home = () => {
             });
     }, []);
 
+    useEffect(() => {
+        axios
+            .get('https://fed-medical-clinic-api.vercel.app/doctors')
+            .then((response) => setDoctors(response.data))
+            .catch((err) => console.log(err));
+
+        axios
+            .get('https://fed-medical-clinic-api.vercel.app/patients')
+            .then((response) => setPatients(response.data))
+            .catch((err) => console.log(err));
+    }, []);
+
     if (!weatherInfo) {
         return <div>Loading...</div>;
     }
 
-    // Getting Icon
     const iconCode = weatherInfo.weather[0].icon;
-
-    // Icon UrRL
     const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
-    // Date
     const timestamp = weatherInfo.dt;
     const date = new Date(timestamp * 1000);
     const simpleDate = date.toDateString();
 
-    // Temperature
     const kelvin = weatherInfo.main.temp;
     const celsius = kelvin - 273.15;
 
-    return(
-        <>
-        <div className="flex flex-col items-center p-8 rounded-md w-60 sm:px-12 dark:bg-gray-50 dark:text-gray-800">
-            <div className="text-center">
-                <h2 className="text-xl font-semibold">{weatherInfo.name}</h2>
-                <p className="text-sm dark:text-gray-600">{simpleDate}</p>
+    return (
+        <div className="bg-gray-100 min-h-screen py-8 px-6 sm:px-12">
+            <div className="max-w-screen-xl mx-auto">
+                {/* Weather Card */}
+                <div className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 rounded-lg shadow-xl p-6 text-white mb-8">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="text-2xl font-bold">{weatherInfo.name}</h2>
+                            <p className="text-lg">{simpleDate}</p>
+                        </div>
+                        <img src={iconUrl} alt={weatherInfo.weather[0].description} className="w-16 h-16" />
+                    </div>
+                    <div className="mt-4">
+                        <p className="text-4xl font-semibold">{celsius.toFixed(0)}°C</p>
+                        <p className="text-xl">{weatherInfo.weather[0].description}</p>
+                    </div>
+                </div>
+
+                {/* Doctors Section */}
+                <div>
+                    <h1 className="text-2xl font-semibold text-gray-800 mb-4">Doctors</h1>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {doctors.length > 0 ? (
+                            doctors.map((doctor) => (
+                                <div
+                                    key={doctor.id}
+                                    className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl"
+                                >
+                                    <div className="p-6">
+                                        <h4 className="text-xl font-semibold text-gray-800">
+                                            {doctor.first_name} {doctor.last_name}
+                                        </h4>
+                                        <p className="text-sm text-gray-600 mt-2">Specialisation: {doctor.specialisation}</p>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-gray-600">No doctors available</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Patients Section */}
+                <div className="mt-8">
+                    <h1 className="text-2xl font-semibold text-gray-800 mb-4">Patients</h1>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {patients.length > 0 ? (
+                            patients.map((patient) => (
+                                <div
+                                    key={patient.id}
+                                    className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl"
+                                >
+                                    <div className="p-6">
+                                        <h4 className="text-xl font-semibold text-gray-800">
+                                            {patient.first_name} {patient.last_name}
+                                        </h4>
+                                        <p className="text-sm text-gray-600 mt-2">Phone: {patient.phone}</p>
+                                        <p className="text-sm text-gray-600 mt-2">Email: {patient.email}</p>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-gray-600">No patients available</p>
+                        )}
+                    </div>
+                </div>
             </div>
-            <img src={iconUrl} alt={weatherInfo.weather[0].description} className="w-24 h-24" />
-            <div className="mb-2 text-3xl font-semibold">
-                {celsius.toFixed(0)}°C
-            </div>
-            <p className="dark:text-gray-600">{weatherInfo.weather[0].description}</p>
         </div>
-        </>
     );
 };
 

@@ -15,14 +15,19 @@ import PatientCreate from "./pages/patients/Create";
 
 // Appointment Pages
 import AppointmentIndex from './pages/appointments/Index';
+import AppointmentShow from './pages/appointments/Show';
 import AppointmentCreate from "./pages/appointments/Create";
+import AppointmentEdit from "./pages/appointments/Edit";
 
 // Diagnoses
 import DiagnosesIndex from './pages/diagnoses/Index';
+import DiagnosesCreate from './pages/diagnoses/Create';
+// import DiagnosesEdit from './pages/diagnoses/Edit';
 
 // Presecriptions
 import PrescriptionsIndex from './pages/prescriptions/Index';
 import PrescriptionsShow from './pages/prescriptions/Show';
+import PrescriptionsCreate from './pages/prescriptions/Create';
 
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
@@ -50,14 +55,19 @@ const App = () => {
 
                     {/* Appointments */}
                     <Route path="/appointments" element={<AppointmentIndex />}/>
+                    <Route path="/appointments:id" element={<AppointmentShow />}/>
                     <Route path="/appointments/create" element={<AppointmentCreate />}/>
+                    <Route path="/appointments/:id/edit" element={<AppointmentEdit />}/>
 
                     {/* Diagnoses */}
                     <Route path="/diagnoses" element={<DiagnosesIndex />}/>
+                    {/* <Route path="/diagnoses/:id/edit" element={<DiagnoseseEdit />}/> */}
+                    <Route path="/diagnoses/create" element={<DiagnosesCreate />}/>
 
                     {/* Prescriptions */}
                     <Route path="/prescriptions" element={<PrescriptionsIndex />}/>
                     <Route path="/prescriptions/:id" element={<PrescriptionsShow />}/>
+                    <Route path="/prescriptions/create" element={<PrescriptionsCreate />}/>
 
                     {/* Login & Register */}
                     <Route path="/login" element={<LoginForm />} />
